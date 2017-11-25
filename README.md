@@ -13,3 +13,6 @@ Site `start.spring.io`
 ## Run application
 `gradle bootRun`
 `java -jar build/libs/hillel-ee-0.0.1-SNAPSHOT.jar`
+
+## JSON transformer
+Jackson
