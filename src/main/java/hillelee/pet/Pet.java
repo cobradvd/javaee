@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Pet {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String specie;
