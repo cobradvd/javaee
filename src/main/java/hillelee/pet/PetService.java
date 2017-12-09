@@ -9,9 +9,22 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PetService {
-    private final PetRepository petRepository;
+    private final JpaPetRepository petRepository;
 
-    public List<Pet> getPets(Optional<String> specie, Optional<Integer> age) {
+    public List<Pet> getPetsUsingSeparateJpaMethods(Optional<String> specie, Optional<Integer> age) {
+        if (specie.isPresent() && age.isPresent()) {
+            return petRepository.findBySpecieAndAge(specie.get(), age.get());
+        }
+        if (specie.isPresent()) {
+            return petRepository.findBySpecie(specie.get());
+        }
+        if (age.isPresent()) {
+            return petRepository.findByAge(age.get());
+        }
+        return petRepository.findAll();
+    }
+
+    public List<Pet> getPetsUsingStreamFilters(Optional<String> specie, Optional<Integer> age) {
         Predicate<Pet> specieFilter = specie.map(this::filterByScpecie)
                                             .orElse(pet -> true);
 
@@ -23,6 +36,10 @@ public class PetService {
         return petRepository.findAll().stream()
                             .filter(complexFilter)
                             .collect(Collectors.toList());
+    }
+
+    public List<Pet> getPetsUsingSingleJpaMethod(Optional<String> specie, Optional<Integer> age){
+        return petRepository.findNullableBySpecieAndAge(specie.orElse(null), age.orElse(null));
     }
 
     private Predicate<Pet> filterByAge(Integer age) {
@@ -42,6 +59,13 @@ public class PetService {
     }
 
     public Optional<Pet> delete(Integer id) {
-        return petRepository.delete(id);
+        Optional<Pet> mayBePet = petRepository.findById(id);
+
+        mayBePet.ifPresent(pet -> petRepository.delete(pet.getId()));
+
+/*        mayBePet.map(Pet::getId)
+                .ifPresent(petRepository::delete);*/
+
+        return mayBePet;
     }
 }

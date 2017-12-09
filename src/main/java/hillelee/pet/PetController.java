@@ -35,7 +35,7 @@ public class PetController {
     public List<Pet> getPets(@RequestParam Optional<String> specie,
                              @RequestParam Optional<Integer> age) {
 
-        return petService.getPets(specie, age);
+        return petService.getPetsUsingSingleJpaMethod(specie, age);
     }
 
     @GetMapping("/pets/{id}")
@@ -73,5 +73,10 @@ public class PetController {
 
     }
 
+/*    @ExceptionHandler(MyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void exceptionHandler(MyEception exception){
+        log.error("error throws");
+    }*/
 }
 
