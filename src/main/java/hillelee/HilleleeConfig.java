@@ -1,8 +1,14 @@
 package hillelee;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import hillelee.pet.JpaPetRepository;
+import hillelee.pet.MedicalCard;
 import hillelee.pet.Pet;
 import hillelee.pet.PetService;
+import hillelee.pet.Prescription;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +27,19 @@ public class HilleleeConfig {
             if(!repository.findAll().isEmpty()){
                 return;
             }
-            repository.save(new Pet("Tom", "Cat", 3));
-            repository.save(new Pet("Jerry", "Mouse", 1));
+            List<Prescription> tomsPrescriptions = new ArrayList<>();
+            tomsPrescriptions.add(new Prescription("paracetatamol", LocalDate.now(), 3));
+            tomsPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3));
+
+            List<Prescription> jerrysPrescriptions = new ArrayList<>();
+
+            jerrysPrescriptions.add(new Prescription("asperin", LocalDate.now(), 3));
+
+            MedicalCard tomsCard = new MedicalCard(LocalDate.now(), "bla-bla");
+            MedicalCard jerrysCard = new MedicalCard(LocalDate.now(), "foo-bar");
+
+            repository.save(new Pet("Tom", "Cat", 3, LocalDate.now(), tomsCard, tomsPrescriptions));
+            repository.save(new Pet("Jerry", "Mouse", 1, LocalDate.now(), jerrysCard, jerrysPrescriptions));
         };
     }
 }
